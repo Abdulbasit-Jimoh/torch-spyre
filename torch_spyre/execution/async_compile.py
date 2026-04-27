@@ -16,6 +16,7 @@ import tempfile
 from typing import Any
 import os
 import subprocess
+import torch
 
 from torch._inductor.runtime.runtime_utils import cache_dir
 from torch_spyre._C import convert_artifacts
@@ -25,6 +26,7 @@ from torch_spyre._inductor.codegen.bundle import generate_bundle
 from .kernel_runner import SpyreSDSCKernelRunner, SpyreUnimplementedRunner
 
 logger = get_inductor_logger("sdsc_compile")
+_ENABLE_TRACING = int(os.environ.get("ENABLE_TRACING", "0"))
 
 
 def get_output_dir(kernel_name: str):
@@ -52,7 +54,13 @@ class SpyreAsyncCompile:
         generate_bundle(kernel_name, output_dir, op_specs)
 
         # Invoke backend compiler of SDSC Bundle
-        subprocess.run(["dxp_standalone", "--bundle", "-d", output_dir], check=True)
+        if _ENABLE_TRACING >= 1:
+            with torch.profiler.record_function(f"dxp_standalone:{kernel_name}"):
+                subprocess.run(
+                    ["dxp_standalone", "--bundle", "-d", output_dir], check=True
+                )
+        else:
+            subprocess.run(["dxp_standalone", "--bundle", "-d", output_dir], check=True)
         convert_artifacts(output_dir)
 
         return SpyreSDSCKernelRunner(kernel_name, output_dir)
