@@ -17,6 +17,7 @@ from typing import Any
 import os
 import subprocess
 import torch
+import torch_spyre
 
 from torch._inductor.runtime.runtime_utils import cache_dir
 from torch_spyre._inductor.logging_utils import get_inductor_logger
