@@ -27,6 +27,7 @@ from .kernel_runner import SpyreSDSCKernelRunner, SpyreUnimplementedRunner
 logger = get_inductor_logger("sdsc_compile")
 _ENABLE_TRACING = int(os.environ.get("ENABLE_TRACING", "0"))
 
+
 def get_output_dir(kernel_name: str):
     spyre_dir = os.path.join(cache_dir(), "inductor-spyre")
     os.makedirs(spyre_dir, exist_ok=True)
@@ -59,7 +60,6 @@ class SpyreAsyncCompile:
                 )
         else:
             subprocess.run(["dxp_standalone", "--bundle", "-d", output_dir], check=True)
-
 
         return SpyreSDSCKernelRunner(kernel_name, output_dir)
 

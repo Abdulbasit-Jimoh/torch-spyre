@@ -20,6 +20,7 @@ import torch
 logger = get_inductor_logger("kernel_runner")
 _ENABLE_TRACING = int(os.environ.get("ENABLE_TRACING", "0"))
 
+
 class SpyreUnimplementedRunner:
     def __init__(self, name: str, op: str):
         self.kernel_name = name
