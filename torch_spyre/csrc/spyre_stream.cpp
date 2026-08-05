@@ -16,9 +16,9 @@
 
 #include "spyre_stream.h"
 
+#include <ATen/record_function.h>
 #include <c10/core/Device.h>
 #include <c10/core/Stream.h>
-#include <ATen/record_function.h> 
 
 #include <cstddef>
 #include <memory>
